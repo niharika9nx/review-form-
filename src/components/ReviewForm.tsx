@@ -53,7 +53,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
       className="glass-card w-full max-w-xl p-8 rounded-3xl space-y-6 z-10"
     >
       <div className="text-center space-y-2">
-        <h1 className="font-display text-4xl font-extrabold tracking-tight text-gold">Memories</h1>
+        <h1 className="font-display text-4xl font-extrabold tracking-tight text-gold">Review form</h1>
         <p className="text-text-muted text-sm">Submit your experience into the cosmic void</p>
       </div>
 
