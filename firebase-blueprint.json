@@ -1,0 +1,25 @@
+{
+  "entities": {
+    "Review": {
+      "title": "Review",
+      "description": "A user-submitted event review",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "year": { "type": "string" },
+        "branch": { "type": "string" },
+        "review": { "type": "string" },
+        "rating": { "type": "number" },
+        "timestamp": { "type": "number", "format": "timestamp" }
+      },
+      "required": ["name", "year", "branch", "review", "rating", "timestamp"]
+    }
+  },
+  "firestore": {
+    "reviews/{reviewId}": {
+      "schema": "Review",
+      "description": "Collection of all cosmic event reviews"
+    }
+  }
+}

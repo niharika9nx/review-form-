@@ -1,0 +1,93 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Syne:wght@400..800&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-display: "Syne", sans-serif;
+  --font-body: "DM Sans", sans-serif;
+}
+
+:root {
+  --bg-deep: #03040a;
+  --bg-mid: #0d0f1e;
+  --glass: rgba(255, 255, 255, 0.055);
+  --border-glow: rgba(255, 200, 80, 0.25);
+  --gold: #f5c518;
+  --ember: #ff6b35;
+  --text-primary: #f0eee8;
+  --text-muted: #9090a0;
+  --success: #3dffa0;
+}
+
+body {
+  background-color: var(--bg-deep);
+  color: var(--text-primary);
+  font-family: var(--font-body);
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.glass-card {
+  background: var(--glass);
+  backdrop-filter: blur(12px);
+  border: 1px solid var(--border-glow);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+}
+
+.aurora {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% -20%, rgba(245, 197, 24, 0.1), transparent 50%),
+              radial-gradient(circle at 80% 80%, rgba(255, 107, 53, 0.05), transparent 40%);
+  pointer-events: none;
+  animation: aurora-pulse 10s ease-in-out infinite alternate;
+  z-index: 1;
+}
+
+@keyframes aurora-pulse {
+  from { opacity: 0.5; transform: scale(1); }
+  to { opacity: 0.8; transform: scale(1.1); }
+}
+
+input, select, textarea {
+  background: rgba(255, 255, 255, 0.03) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: var(--text-primary) !important;
+  transition: all 0.3s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+  border-color: var(--gold) !important;
+  box-shadow: 0 0 15px var(--border-glow) !important;
+  outline: none;
+}
+
+.gold-gradient-bg {
+  background: linear-gradient(45deg, var(--gold), var(--ember), var(--gold));
+  background-size: 200% 200%;
+  animation: gradient-sweep 3s ease infinite;
+}
+
+@keyframes gradient-sweep {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+.animate-shake {
+  animation: shake 0.2s ease-in-out 0s 2;
+  border-color: var(--ember) !important;
+  box-shadow: 0 0 10px rgba(255, 107, 53, 0.4) !important;
+}

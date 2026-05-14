@@ -1,0 +1,50 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // 0. Global Safety Net
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper Primitives
+    function isSignedIn() { return request.auth != null; }
+    function isValidId(id) { return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$'); }
+    function incoming() { return request.resource.data; }
+    function existing() { return resource.data; }
+    
+    // Admin check: Only niharikachinimilli9@gmail.com is admin for now
+    function isAdmin() { 
+      return isSignedIn() && (
+        request.auth.token.email == 'niharikachinimilli9@gmail.com' &&
+        request.auth.token.email_verified == true
+      );
+    }
+
+    // Review Validation
+    function isValidReview(data) {
+      return data.keys().hasAll(['name', 'year', 'branch', 'review', 'rating', 'timestamp']) &&
+             data.keys().size() == 6 &&
+             data.name is string && data.name.size() >= 2 && data.name.size() <= 100 &&
+             data.year is string && data.year.size() <= 20 &&
+             data.branch is string && data.branch.size() <= 20 &&
+             data.review is string && data.review.size() >= 20 && data.review.size() <= 2000 &&
+             data.rating is int && data.rating >= 1 && data.rating <= 5 &&
+             // Enforce server-side timestamp integrity
+             data.timestamp is int && Math.abs(data.timestamp - request.time.toMillis()) < 60000;
+    }
+
+    match /reviews/{reviewId} {
+      // 8. Secure List Queries: Anyone can list, but restricted to valid IDs
+      allow read: if true; 
+
+      // 2. Validation Blueprints: strict schema checks
+      allow create: if isValidId(reviewId) && isValidReview(incoming());
+
+      // 4. Tiered Identity: Reviews are immutable
+      allow update: if false;
+
+      // Only admins can delete
+      allow delete: if isAdmin();
+    }
+  }
+}
