@@ -10,7 +10,7 @@ import StarRating from './StarRating';
 import { Send } from 'lucide-react';
 
 interface ReviewFormProps {
-  onSubmit: (review: Omit<Review, 'id' | 'timestamp'>) => void;
+  onSubmit: (review: Omit<Review, 'id' | 'timestamp'>) => Promise<void>;
 }
 
 const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
@@ -24,6 +24,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
 
   const [errors, setErrors] = useState<Record<string, boolean>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   const validate = () => {
     const newErrors: Record<string, boolean> = {};
@@ -38,9 +39,13 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
     e.preventDefault();
     if (validate()) {
       setIsSubmitting(true);
-      // Simulate network for UX
-      await new Promise(resolve => setTimeout(resolve, 800));
-      onSubmit(formData);
+      setSubmitError(null);
+      try {
+        await onSubmit(formData);
+      } catch (error: any) {
+        setIsSubmitting(false);
+        setSubmitError(error.message || "Failed to submit memory");
+      }
     }
   };
 
@@ -71,7 +76,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
           />
           <label 
             htmlFor="name"
-            className="absolute left-4 top-4 text-text-muted transition-all origin-left pointer-events-none peer-focus:-translate-y-3 peer-focus:scale-75 peer-focus:text-gold peer-[:not(:placeholder-shown)]:-translate-y-3 peer-[:not(:placeholder-shown)]:scale-75 peer-[:not(:placeholder-shown)]:text-gold"
+            className="absolute left-4 top-5 text-text-muted transition-all origin-left pointer-events-none peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:text-gold peer-[:not(:placeholder-shown)]:-translate-y-5 peer-[:not(:placeholder-shown)]:scale-75 peer-[:not(:placeholder-shown)]:text-gold"
           >
             Your Name
           </label>
@@ -82,7 +87,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
           <div className="space-y-1">
             <label className="text-xs text-text-muted ml-2">Year</label>
             <select
-              className="w-full p-4 rounded-xl cursor-not-allowed"
+              className="w-full p-4 rounded-xl cursor-pointer"
               value={formData.year}
               onChange={(e) => setFormData({ ...formData, year: e.target.value })}
             >
@@ -110,13 +115,13 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
             id="review"
             rows={5}
             placeholder=" "
-            className={`w-full p-4 rounded-xl pt-8 peer ${errors.review ? 'border-ember animate-shake' : ''}`}
+            className={`w-full p-4 rounded-xl pt-10 peer ${errors.review ? 'border-ember animate-shake' : ''}`}
             value={formData.review}
             onChange={(e) => setFormData({ ...formData, review: e.target.value })}
           />
           <label 
             htmlFor="review"
-            className="absolute left-4 top-4 text-text-muted transition-all origin-left pointer-events-none peer-focus:-translate-y-3 peer-focus:scale-75 peer-focus:text-gold peer-[:not(:placeholder-shown)]:-translate-y-3 peer-[:not(:placeholder-shown)]:scale-75 peer-[:not(:placeholder-shown)]:text-gold"
+            className="absolute left-4 top-5 text-text-muted transition-all origin-left pointer-events-none peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:text-gold peer-[:not(:placeholder-shown)]:-translate-y-5 peer-[:not(:placeholder-shown)]:scale-75 peer-[:not(:placeholder-shown)]:text-gold"
           >
             The Experience
           </label>
@@ -162,6 +167,19 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
           )}
         </AnimatePresence>
       </motion.button>
+      
+      <AnimatePresence>
+        {submitError && (
+          <motion.div 
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0 }}
+            className="text-center p-3 rounded-lg bg-ember/10 border border-ember/20 text-ember text-xs font-medium"
+          >
+            {submitError}
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.form>
   );
 };
