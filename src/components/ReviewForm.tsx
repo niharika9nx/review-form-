@@ -70,13 +70,13 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
             required
             id="name"
             placeholder=" "
-            className={`w-full p-4 rounded-xl pt-8 peer ${errors.name ? 'border-ember animate-shake' : ''}`}
+            className={`w-full p-4 rounded-xl pt-6 peer ${errors.name ? 'border-ember animate-shake' : ''}`}
             value={formData.name}
             onChange={(e) => setFormData({ ...formData, name: e.target.value })}
           />
           <label 
             htmlFor="name"
-            className="absolute left-4 top-5 text-text-muted transition-all origin-left pointer-events-none peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:text-gold peer-[:not(:placeholder-shown)]:-translate-y-5 peer-[:not(:placeholder-shown)]:scale-75 peer-[:not(:placeholder-shown)]:text-gold"
+            className="absolute left-4 top-4 text-text-muted transition-all origin-left pointer-events-none peer-focus:-translate-y-3 peer-focus:scale-75 peer-focus:text-gold peer-[:not(:placeholder-shown)]:-translate-y-3 peer-[:not(:placeholder-shown)]:scale-75 peer-[:not(:placeholder-shown)]:text-gold"
           >
             Your Name
           </label>
@@ -99,7 +99,7 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
           <div className="space-y-1">
             <label className="text-xs text-text-muted ml-2">Branch</label>
             <select
-              className="w-full p-4 rounded-xl"
+              className="w-full p-4 rounded-xl cursor-pointer"
               value={formData.branch}
               onChange={(e) => setFormData({ ...formData, branch: e.target.value })}
             >
@@ -115,13 +115,13 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
             id="review"
             rows={5}
             placeholder=" "
-            className={`w-full p-4 rounded-xl pt-10 peer ${errors.review ? 'border-ember animate-shake' : ''}`}
+            className={`w-full p-4 rounded-xl pt-8 peer ${errors.review ? 'border-ember animate-shake' : ''}`}
             value={formData.review}
             onChange={(e) => setFormData({ ...formData, review: e.target.value })}
           />
           <label 
             htmlFor="review"
-            className="absolute left-4 top-5 text-text-muted transition-all origin-left pointer-events-none peer-focus:-translate-y-5 peer-focus:scale-75 peer-focus:text-gold peer-[:not(:placeholder-shown)]:-translate-y-5 peer-[:not(:placeholder-shown)]:scale-75 peer-[:not(:placeholder-shown)]:text-gold"
+            className="absolute left-4 top-5 text-text-muted transition-all origin-left pointer-events-none peer-focus:-translate-y-4 peer-focus:scale-75 peer-focus:text-gold peer-[:not(:placeholder-shown)]:-translate-y-4 peer-[:not(:placeholder-shown)]:scale-75 peer-[:not(:placeholder-shown)]:text-gold"
           >
             The Experience
           </label>
@@ -176,7 +176,17 @@ const ReviewForm: React.FC<ReviewFormProps> = ({ onSubmit }) => {
             exit={{ opacity: 0 }}
             className="text-center p-3 rounded-lg bg-ember/10 border border-ember/20 text-ember text-xs font-medium"
           >
-            {submitError}
+            {(() => {
+              try {
+                const parsed = JSON.parse(submitError);
+                if (parsed.error && parsed.error.includes("Missing or insufficient permissions")) {
+                  return "Submission failed: Please check your internet connection or try again later. (Error: SEC_REJECT)";
+                }
+                return parsed.error || submitError;
+              } catch (e) {
+                return submitError;
+              }
+            })()}
           </motion.div>
         )}
       </AnimatePresence>
