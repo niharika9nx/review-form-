@@ -142,7 +142,7 @@ export default function App() {
             onClick={handleFooterClick}
             className="text-[10px] text-text-muted hover:text-text-primary transition-colors cursor-default select-none uppercase tracking-widest"
           >
-            © Event 2025 • Memories of enlightmment
+            © Event 2026 • Memories of enlightmment
           </button>
         </footer>
       )}

@@ -18,7 +18,7 @@ const AdminLogin: React.FC<AdminLoginProps> = ({ onLogin, onClose }) => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (credentials.username === 'admin' && credentials.password === 'event@2025') {
+    if (credentials.username === 'admin' && credentials.password === 'event@2026') {
       onLogin();
     } else {
       setError(true);
